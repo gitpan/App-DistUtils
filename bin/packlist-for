@@ -1,0 +1,149 @@
+#!perl
+
+our $DATE = '2014-12-04'; # DATE
+our $VERSION = '0.01'; # VERSION
+
+use 5.010;
+use strict;
+use warnings;
+
+#use App::DistUtils;
+use App::PMUtils;
+use Perinci::CmdLine::Any -prefer_lite=>1;
+use Perinci::Object;
+
+our %SPEC;
+
+$SPEC{packlist_for} = {
+    v => 1.1,
+    summary => 'Locate .packlist for a Perl module',
+    args => {
+        module => {
+            schema => ['array*', of=>'str*', min_len=>1],
+            req    => 1,
+            pos    => 0,
+            greedy => 1,
+            element_completion => $App::PMUtils::_complete_module,
+        },
+    },
+    "cmdline.default_format" => 'text-simple',
+};
+sub packlist_for {
+    require Dist::Util;
+    my %args = @_;
+
+    my $mods = $args{module};
+
+    my @res;
+    my $envres = envresmulti([200,"OK",\@res]);
+    for my $mod (@$mods) {
+        my $packlist = Dist::Util::packlist_for($mod);
+        if (defined $packlist) {
+            $envres->add_result(200, "OK", {item_id=>$mod});
+            push @res, @$mods > 1 ?
+                {module=>$mod, packlist=>$packlist} :
+                    $packlist;
+        } else {
+            $envres->add_result(404, "Not found", {item_id=>$mod});
+        }
+    }
+    $envres->as_struct;
+}
+
+Perinci::CmdLine::Any->new(
+    url => "/main/packlist_for",
+)->run;
+
+# ABSTRACT: Locate .packlist for installed Perl module
+# PODNAME: packlist-for
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+packlist-for - Locate .packlist for installed Perl module
+
+=head1 VERSION
+
+This document describes version 0.01 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-04.
+
+=head1 SYNOPSIS
+
+ % packlist-for Text::ANSITable Foo
+ Text::ANSITable: /home/steven/perl5/perlbrew/perls/perl-5.18.2/lib/site_perl/5.18.2/x86_64-linux/auto/Text/ANSITable/.packlist
+ packlist for Foo not found
+
+=head1 DESCRIPTION
+
+=head1 COMPLETION
+
+This script has shell tab completion capability with support for several shells.
+
+=head2 bash
+
+To activate bash completion for this script, put:
+
+ complete -C packlist-for packlist-for
+
+in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+You can also install L<App::BashCompletionProg> which makes it easy to add completion for Perinci::CmdLine-based scripts. After you install the module and put C<. ~/.bash-complete-prog> (or C<. /etc/bash-complete-prog>), you can just run C<bash-completion-prog> and the C<complete> command will be added to your C<~/.bash-completion-prog>. Your next shell session will then recognize tab completion for the command.
+
+=head2 fish
+
+To activate fish completion for this script, execute:
+
+ begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; packlist-for; end > $HOME/.config/fish/completions/packlist-for.fish
+
+Or if you want to install globally, you can instead write the generated script to C</etc/fish/completions/packlist-for.fish> or C</usr/share/fish/completions/packlist-for.fish>. The exact path might be different on your system. Please check your C<fish_complete_path> variable.
+
+=head2 tcsh
+
+To activate tcsh completion for this script, put:
+
+ complete packlist-for 'p/*/`packlist-for`/'
+
+in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+=head2 zsh
+
+To activate zsh completion for this script, put:
+
+ _packlist_for() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_SHELL=zsh COMP_LINE="$cl" COMP_POINT="$cp" packlist-for`) }
+
+ compctl -K _packlist_for packlist-for
+
+in your zsh startup (e.g. C<~/.zshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+=head1 HOMEPAGE
+
+Please visit the project's homepage at L<https://metacpan.org/release/App-DistUtils>.
+
+=head1 SOURCE
+
+Source repository is at L<https://github.com/perlancar/perl-App-DistUtils>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=App-DistUtils>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
+=head1 AUTHOR
+
+perlancar <perlancar@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by perlancar@cpan.org.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

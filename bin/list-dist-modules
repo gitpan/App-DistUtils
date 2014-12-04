@@ -1,0 +1,141 @@
+#!perl
+
+our $DATE = '2014-12-04'; # DATE
+our $VERSION = '0.01'; # VERSION
+
+use 5.010;
+use strict;
+use warnings;
+
+#use App::DistUtils;
+use Dist::Util ();
+use Perinci::CmdLine::Any -prefer_lite=>1;
+
+our %SPEC;
+
+$SPEC{list_dist_modules} = {
+    v => 1.1,
+    summary => 'List modules that come with an installed Perl distributions',
+    args => {
+        dist => {
+            schema => 'str*',
+            req => 1,
+            pos => 0,
+            completion => sub {
+                require Complete::Util;
+
+                my %args = @_;
+
+                my $word = $args{word} // '';
+                $word =~ s!/|::!-!g;
+                Complete::Util::complete_array_elem(
+                    word=>$word,
+                    array=>[Dist::Util::list_dists],
+                    ci=>1,
+                );
+            },
+        },
+    },
+    "cmdline.default_format" => 'text-simple',
+};
+sub list_dist_modules {
+    my %args = @_;
+
+    [200, "OK", [Dist::Util::list_dist_modules($args{dist})]];
+}
+
+Perinci::CmdLine::Any->new(
+    url => "/main/list_dist_modules",
+)->run;
+
+# ABSTRACT: List modules that come with an installed Perl distributions
+# PODNAME: list-dist-modules
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+list-dist-modules - List modules that come with an installed Perl distributions
+
+=head1 VERSION
+
+This document describes version 0.01 of list-dist-modules (from Perl distribution App-DistUtils), released on 2014-12-04.
+
+=head1 SYNOPSIS
+
+ % list-dist-modules Text-ANSITable
+
+=head1 DESCRIPTION
+
+=head1 COMPLETION
+
+This script has shell tab completion capability with support for several shells.
+
+=head2 bash
+
+To activate bash completion for this script, put:
+
+ complete -C list-dist-modules list-dist-modules
+
+in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+You can also install L<App::BashCompletionProg> which makes it easy to add completion for Perinci::CmdLine-based scripts. After you install the module and put C<. ~/.bash-complete-prog> (or C<. /etc/bash-complete-prog>), you can just run C<bash-completion-prog> and the C<complete> command will be added to your C<~/.bash-completion-prog>. Your next shell session will then recognize tab completion for the command.
+
+=head2 fish
+
+To activate fish completion for this script, execute:
+
+ begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; list-dist-modules; end > $HOME/.config/fish/completions/list-dist-modules.fish
+
+Or if you want to install globally, you can instead write the generated script to C</etc/fish/completions/list-dist-modules.fish> or C</usr/share/fish/completions/list-dist-modules.fish>. The exact path might be different on your system. Please check your C<fish_complete_path> variable.
+
+=head2 tcsh
+
+To activate tcsh completion for this script, put:
+
+ complete list-dist-modules 'p/*/`list-dist-modules`/'
+
+in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+=head2 zsh
+
+To activate zsh completion for this script, put:
+
+ _list_dist_modules() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_SHELL=zsh COMP_LINE="$cl" COMP_POINT="$cp" list-dist-modules`) }
+
+ compctl -K _list_dist_modules list-dist-modules
+
+in your zsh startup (e.g. C<~/.zshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+=head1 HOMEPAGE
+
+Please visit the project's homepage at L<https://metacpan.org/release/App-DistUtils>.
+
+=head1 SOURCE
+
+Source repository is at L<https://github.com/perlancar/perl-App-DistUtils>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=App-DistUtils>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
+=head1 AUTHOR
+
+perlancar <perlancar@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by perlancar@cpan.org.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

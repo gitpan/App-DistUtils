@@ -2,8 +2,8 @@ NAME
     App::DistUtils - Collection of utilities related to Perl distributions
 
 VERSION
-    This document describes version 0.01 of App::DistUtils (from Perl
-    distribution App-DistUtils), released on 2014-12-04.
+    This document describes version 0.02 of App::DistUtils (from Perl
+    distribution App-DistUtils), released on 2014-12-06.
 
 SYNOPSIS
     This distribution provides several command-line utilities related to

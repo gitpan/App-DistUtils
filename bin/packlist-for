@@ -1,7 +1,7 @@
 #!perl
 
-our $DATE = '2014-12-04'; # DATE
-our $VERSION = '0.01'; # VERSION
+our $DATE = '2014-12-06'; # DATE
+our $VERSION = '0.02'; # VERSION
 
 use 5.010;
 use strict;
@@ -37,6 +37,7 @@ sub packlist_for {
     my @res;
     my $envres = envresmulti([200,"OK",\@res]);
     for my $mod (@$mods) {
+        $mod =~ s!-!::!g;
         my $packlist = Dist::Util::packlist_for($mod);
         if (defined $packlist) {
             $envres->add_result(200, "OK", {item_id=>$mod});
@@ -69,7 +70,7 @@ packlist-for - Locate .packlist for installed Perl module
 
 =head1 VERSION
 
-This document describes version 0.01 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-04.
+This document describes version 0.02 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-06.
 
 =head1 SYNOPSIS
 

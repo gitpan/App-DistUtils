@@ -2,11 +2,11 @@ use 5.006;
 use strict;
 use warnings;
 
-# this test was generated with Dist::Zilla::Plugin::Test::Compile 2.043
+# this test was generated with Dist::Zilla::Plugin::Test::Compile 2.051
 
-use Test::More  tests => 5 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
+use Test::More;
 
-
+plan tests => 6 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
 
 my @module_files = (
     'App/DistUtils.pm'
@@ -16,7 +16,8 @@ my @scripts = (
     'bin/list-dist-contents',
     'bin/list-dist-modules',
     'bin/list-dists',
-    'bin/packlist-for'
+    'bin/packlist-for',
+    'bin/uninstall-dist'
 );
 
 # no fake home requested
@@ -75,6 +76,7 @@ foreach my $file (@scripts)
 
 
 
-is(scalar(@warnings), 0, 'no warnings found') if $ENV{AUTHOR_TESTING};
+is(scalar(@warnings), 0, 'no warnings found')
+    or diag 'got warnings: ', ( Test::More->can('explain') ? Test::More::explain(\@warnings) : join("\n", '', @warnings) ) if $ENV{AUTHOR_TESTING};
 
 

@@ -8,36 +8,72 @@ use strict;
 use warnings;
 
 use App::DistUtils;
-use Dist::Util ();
+#use List::Util qw(first);
 use Perinci::CmdLine::Any -prefer_lite=>1;
+use Perinci::Object;
 
 our %SPEC;
 
-$SPEC{list_dist_modules} = {
+$SPEC{uninstall_dist} = {
     v => 1.1,
-    summary => 'List modules that come with an installed Perl distributions',
+    summary => 'Uninstall a Perl distribution',
     args => {
         dist => {
-            schema => 'str*',
+            schema => ['array*', of=>'str*', min_len=>1],
             req => 1,
             pos => 0,
-            completion => $App::DistUtils::_complete_dist,
-         },
+            greedy => 1,
+            element_completion => $App::DistUtils::_complete_dist,
+        },
     },
-    "cmdline.default_format" => 'text-simple',
+    deps => {
+        prog => 'cpanm',
+    },
 };
-sub list_dist_modules {
+sub uninstall_dist {
     my %args = @_;
 
-    [200, "OK", [Dist::Util::list_dist_modules($args{dist})]];
+    my $res = envresmulti();
+    my $dists = $args{dist};
+
+    for my $dist0 (@$dists) {
+        (my $dist = $dist0) =~ s/-/::/g;
+        my $packlist = Dist::Util::packlist_for($dist);
+        unless ($packlist) {
+            $res->add_result(404, "Can't find .packlist for $dist0",
+                             {item_id=>$dist0});
+            next;
+        }
+
+        # the easy way
+        my $mod = $dist;
+
+        # the proper way
+        #@lines = do { open my($fh), "<", $packlist; map {chomp} <$fh> };
+        ## find the first module for module name to feed to cpanm
+        #my $mod = first { /\.pm\z/ } @lines;
+        ## XXX read package declaration from module file
+
+        system "cpanm", "--uninstall", $mod;
+
+        if ($?) {
+            $res->add_result(500, "Uninstall $dist0 failed: $!",
+                             {item_id=>$dist0});
+        } else {
+            $res->add_result(200, "OK",
+                             {item_id=>$dist0});
+        }
+    }
+
+    $res->as_struct;
 }
 
 Perinci::CmdLine::Any->new(
-    url => "/main/list_dist_modules",
+    url => "/main/uninstall_dist",
 )->run;
 
-# ABSTRACT: List modules that come with an installed Perl distributions
-# PODNAME: list-dist-modules
+# ABSTRACT: List contents of an installed Perl distribution
+# PODNAME: list-dist-contents
 
 __END__
 
@@ -47,15 +83,15 @@ __END__
 
 =head1 NAME
 
-list-dist-modules - List modules that come with an installed Perl distributions
+list-dist-contents - List contents of an installed Perl distribution
 
 =head1 VERSION
 
-This document describes version 0.03 of list-dist-modules (from Perl distribution App-DistUtils), released on 2014-12-12.
+This document describes version 0.03 of list-dist-contents (from Perl distribution App-DistUtils), released on 2014-12-12.
 
 =head1 SYNOPSIS
 
- % list-dist-modules Text-ANSITable
+ % list-dist-contents Text-ANSITable
 
 =head1 DESCRIPTION
 
@@ -67,7 +103,7 @@ This script has shell tab completion capability with support for several shells.
 
 To activate bash completion for this script, put:
 
- complete -C list-dist-modules list-dist-modules
+ complete -C uninstall-dist uninstall-dist
 
 in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 
@@ -77,15 +113,15 @@ You can also install L<App::BashCompletionProg> which makes it easy to add compl
 
 To activate fish completion for this script, execute:
 
- begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; list-dist-modules; end > $HOME/.config/fish/completions/list-dist-modules.fish
+ begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; uninstall-dist; end > $HOME/.config/fish/completions/uninstall-dist.fish
 
-Or if you want to install globally, you can instead write the generated script to C</etc/fish/completions/list-dist-modules.fish> or C</usr/share/fish/completions/list-dist-modules.fish>. The exact path might be different on your system. Please check your C<fish_complete_path> variable.
+Or if you want to install globally, you can instead write the generated script to C</etc/fish/completions/uninstall-dist.fish> or C</usr/share/fish/completions/uninstall-dist.fish>. The exact path might be different on your system. Please check your C<fish_complete_path> variable.
 
 =head2 tcsh
 
 To activate tcsh completion for this script, put:
 
- complete list-dist-modules 'p/*/`list-dist-modules`/'
+ complete uninstall-dist 'p/*/`uninstall-dist`/'
 
 in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 
@@ -93,9 +129,9 @@ in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then reco
 
 To activate zsh completion for this script, put:
 
- _list_dist_modules() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_SHELL=zsh COMP_LINE="$cl" COMP_POINT="$cp" list-dist-modules`) }
+ _uninstall_dist() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_SHELL=zsh COMP_LINE="$cl" COMP_POINT="$cp" uninstall-dist`) }
 
- compctl -K _list_dist_modules list-dist-modules
+ compctl -K _uninstall_dist uninstall-dist
 
 in your zsh startup (e.g. C<~/.zshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 

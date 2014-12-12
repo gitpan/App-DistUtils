@@ -1,7 +1,7 @@
 #!perl
 
-our $DATE = '2014-12-06'; # DATE
-our $VERSION = '0.02'; # VERSION
+our $DATE = '2014-12-12'; # DATE
+our $VERSION = '0.03'; # VERSION
 
 use 5.010;
 use strict;
@@ -70,7 +70,7 @@ packlist-for - Locate .packlist for installed Perl module
 
 =head1 VERSION
 
-This document describes version 0.02 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-06.
+This document describes version 0.03 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-12.
 
 =head1 SYNOPSIS
 
@@ -92,7 +92,7 @@ To activate bash completion for this script, put:
 
 in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 
-You can also install L<App::BashCompletionProg> which makes it easy to add completion for Perinci::CmdLine-based scripts. After you install the module and put C<. ~/.bash-complete-prog> (or C<. /etc/bash-complete-prog>), you can just run C<bash-completion-prog> and the C<complete> command will be added to your C<~/.bash-completion-prog>. Your next shell session will then recognize tab completion for the command.
+You can also install L<App::BashCompletionProg> which makes it easy to add completion for Getopt::Long::Complete-based scripts. After you install the module and put C<. ~/.bash-complete-prog> (or C<. /etc/bash-complete-prog>), you can just run C<bash-completion-prog> and the C<complete> command will be added to your C<~/.bash-completion-prog>. Your next shell session will then recognize tab completion for the command.
 
 =head2 fish
 

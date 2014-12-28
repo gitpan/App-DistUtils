@@ -1,27 +1,9 @@
 package App::DistUtils;
 
-our $DATE = '2014-12-12'; # DATE
-our $VERSION = '0.03'; # VERSION
+our $DATE = '2014-12-28'; # DATE
+our $VERSION = '0.04'; # VERSION
 
 use 5.010001;
-use strict;
-use warnings;
-
-use Dist::Util ();
-
-our $_complete_dist = sub {
-    require Complete::Util;
-
-    my %args = @_;
-
-    my $word = $args{word} // '';
-    $word =~ s!/|::!-!g;
-    Complete::Util::complete_array_elem(
-        word=>$word,
-        array=>[Dist::Util::list_dists()],
-        ci=>1,
-    );
-};
 
 1;
 # ABSTRACT: Collection of utilities related to Perl distributions
@@ -38,7 +20,7 @@ App::DistUtils - Collection of utilities related to Perl distributions
 
 =head1 VERSION
 
-This document describes version 0.03 of App::DistUtils (from Perl distribution App-DistUtils), released on 2014-12-12.
+This document describes version 0.04 of App::DistUtils (from Perl distribution App-DistUtils), released on 2014-12-28.
 
 =head1 SYNOPSIS
 

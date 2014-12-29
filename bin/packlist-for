@@ -1,7 +1,7 @@
 #!perl
 
-our $DATE = '2014-12-28'; # DATE
-our $VERSION = '0.04'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.05'; # VERSION
 
 use 5.010;
 use strict;
@@ -31,6 +31,7 @@ $SPEC{packlist_for} = {
 };
 sub packlist_for {
     require Dist::Util;
+
     my %args = @_;
 
     my $mods = $args{module};
@@ -71,7 +72,7 @@ packlist-for - Locate .packlist for a Perl module
 
 =head1 VERSION
 
-This document describes version 0.04 of packlist-for (from Perl distribution App-DistUtils), released on 2014-12-28.
+This document describes version 0.05 of packlist-for (from Perl distribution App-DistUtils), released on 2015-12-29.
 
 =head1 SYNOPSIS
 

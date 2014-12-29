@@ -1,13 +1,12 @@
 #!perl
 
-our $DATE = '2014-12-28'; # DATE
-our $VERSION = '0.04'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.05'; # VERSION
 
 use 5.010;
 use strict;
 use warnings;
 
-use Dist::Util ();
 use Perinci::CmdLine::Any -prefer_lite=>1;
 
 our %SPEC;
@@ -29,6 +28,8 @@ $SPEC{list_dist_contents} = {
     },
 };
 sub list_dist_contents {
+    require Dist::Util;
+
     my %args = @_;
 
     my $dist = $args{dist};
@@ -57,7 +58,7 @@ list-dist-contents - List contents of an installed Perl distribution
 
 =head1 VERSION
 
-This document describes version 0.04 of list-dist-contents (from Perl distribution App-DistUtils), released on 2014-12-28.
+This document describes version 0.05 of list-dist-contents (from Perl distribution App-DistUtils), released on 2015-12-29.
 
 =head1 SYNOPSIS
 

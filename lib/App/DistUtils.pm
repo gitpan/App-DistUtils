@@ -1,7 +1,7 @@
 package App::DistUtils;
 
-our $DATE = '2014-12-28'; # DATE
-our $VERSION = '0.04'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.05'; # VERSION
 
 use 5.010001;
 
@@ -20,7 +20,7 @@ App::DistUtils - Collection of utilities related to Perl distributions
 
 =head1 VERSION
 
-This document describes version 0.04 of App::DistUtils (from Perl distribution App-DistUtils), released on 2014-12-28.
+This document describes version 0.05 of App::DistUtils (from Perl distribution App-DistUtils), released on 2015-12-29.
 
 =head1 SYNOPSIS
 

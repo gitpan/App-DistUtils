@@ -1,13 +1,12 @@
 #!perl
 
-our $DATE = '2014-12-28'; # DATE
-our $VERSION = '0.04'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.05'; # VERSION
 
 use 5.010;
 use strict;
 use warnings;
 
-use Dist::Util ();
 use Perinci::CmdLine::Any -prefer_lite=>1;
 
 our %SPEC;
@@ -29,6 +28,8 @@ $SPEC{list_dist_modules} = {
     },
 };
 sub list_dist_modules {
+    require Dist::Util;
+
     my %args = @_;
 
     [200, "OK", [Dist::Util::list_dist_modules($args{dist})]];
@@ -53,7 +54,7 @@ list-dist-modules - List modules that come with an installed Perl distributions
 
 =head1 VERSION
 
-This document describes version 0.04 of list-dist-modules (from Perl distribution App-DistUtils), released on 2014-12-28.
+This document describes version 0.05 of list-dist-modules (from Perl distribution App-DistUtils), released on 2015-12-29.
 
 =head1 SYNOPSIS
 
